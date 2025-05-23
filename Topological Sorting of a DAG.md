@@ -1,111 +1,71 @@
-# Ex. No: 17A - Adjacency List Representation of a Graph
+# Ex. No: 17D - Topological Sorting of a DAG
 
 ## AIM:
-To write a Python program to demonstrate the **adjacency list representation** of the given graph.
-
----
+To write a Python program to **print topological sorting** of a **Directed Acyclic Graph (DAG)**.
 
 ## ALGORITHM:
 
-**Step 1**: Start the program.
+**Step 1**: Create a graph and add edges to represent relationships between nodes.
 
-**Step 2**: Define a class `AdjNode` to create a node for each adjacent vertex:
-- Store the **vertex number**.
-- Store the **link to the next adjacent node**.
+**Step 2**: Use a `visited` set to keep track of visited nodes and a **stack** (or list) to record the **order of nodes** after processing.
 
-**Step 3**: Define a class `Graph` to create the graph using adjacency lists:
-- Initialize the **number of vertices**.
-- Create a **list (array)** of size `V`, where each element is initially `None`.
+**Step 3**: Perform **DFS** for each unvisited node:
+- Explore all its neighbors.
+- Recursively apply DFS to each unvisited adjacent node.
+- After all neighbors are visited, **push the current node onto the stack**.
 
-**Step 4**: Define a method `add_edge(src, dest)` to:
-- Add `dest` to the adjacency list of `src`.
-- Add `src` to the adjacency list of `dest` (for **undirected graphs**).
+**Step 4**: After DFS is complete for all nodes, the stack will contain nodes in **reverse order of their completion time**.
 
-**Step 5**: Define a method `print_graph()` to:
-- Traverse the adjacency list of each vertex.
-- Print the **vertex** and its **adjacent nodes**.
-
-**Step 6**: In the main program:
-- Create a `Graph` object with `V` vertices.
-- Call `add_edge()` for all desired edges.
-- Call `print_graph()` to display the adjacency list.
-
-**Step 7**: End the program.
+**Step 5**: Print the stack in **reverse** to get the **topological order**.
 
 ---
 
 ## PYTHON PROGRAM
 
 ```
-"""
-A Python program to demonstrate the adjacency
-list representation of the graph
-"""
+# A Python3 program to print topological sorting of a DAG
+def addEdge(u, v):
+	global adj
+	adj[u].append(v)
 
-# A class to represent the adjacency list of the node
+# The function to do DFS() and stores departure time
+# of all vertex
+def DFS(v):
+	global visited, departure, time
+	visited[v] = 1
+	for i in adj[v]:
+		if visited[i] == 0:
+			DFS(i)
+	departure[time] = v
+	time += 1
 
+# The function to do Topological Sort. It uses DFS().
+def topologicalSort():
+    for i in range(V):
+        if (visited[i]==0):
+            DFS(i)
+    for i in range(V-1,-1,-1):
+        print(departure[i],end=" ")
+if __name__ == '__main__':
 
-class AdjNode:
-	def __init__(self, data):
-		self.vertex = data
-		self.next = None
+	# Create a graph given in the above diagram
+	V,time, adj, visited, departure = 6, 0, [[] for i in range(7)], [0 for i in range(7)],[-1 for i in range(7)]
+	addEdge(5, 2)
+	addEdge(5, 0)
+	addEdge(4, 0)
+	addEdge(4, 1)
+	addEdge(2, 3)
+	addEdge(3, 1)
 
-
-# A class to represent a graph. A graph
-# is the list of the adjacency lists.
-# Size of the array will be the no. of the
-# vertices "V"
-class Graph:
-	def __init__(self, vertices):
-		self.V = vertices
-		self.graph = [None] * self.V
-
-	# Function to add an edge in an undirected graph
-	def add_edge(self, src, dest):
-		# Adding the node to the source node
-		node = AdjNode(dest)
-		node.next = self.graph[src]
-		self.graph[src] = node
-
-		# Adding the source node to the destination as
-		# it is the undirected graph
-		node = AdjNode(src)
-		node.next = self.graph[dest]
-		self.graph[dest] = node
-
-	
-	def print_graph(self):
-	    for i in range(self.V):
-	        print("Adjacency list of vertex {}\n head".format(i),end=" ")
-	        temp=self.graph[i]
-	        while temp:
-	            print("-> {}".format(temp.vertex),end=" ")
-	            temp=temp.next
-	        print("\n")
-		
-	
-
-
-# Driver program to the above graph class
-if __name__ == "__main__":
-	V = 5
-	graph = Graph(V)
-	graph.add_edge(0, 1)
-	graph.add_edge(0, 4)
-	graph.add_edge(1, 2)
-	graph.add_edge(1, 3)
-	graph.add_edge(1, 4)
-	graph.add_edge(2, 3)
-	graph.add_edge(3, 4)
-
-	graph.print_graph()
+	print("Topological Sort of the given graph is")
+	topologicalSort()
 
 ```
 
 ## OUTPUT
 
-![image](https://github.com/user-attachments/assets/61f55a9e-d467-4880-9031-c0622ca8384a)
+![image](https://github.com/user-attachments/assets/b99c9ab8-a591-4fa3-aba2-95ab798b5883)
 
 ## RESULT
 
-Thus, the Python program for demonstrating the **adjacency list representation** of the given graph is executed successfully.
+Thus, the Python program to **print topological sorting** of a **Directed Acyclic Graph (DAG)** is executed successfully.
